@@ -1,0 +1,174 @@
+<section class="section-shell">
+  <div class="page-width reveal">
+    <div class="section-intro">
+      <span class="eyebrow">{{ section.settings.eyebrow }}</span>
+      <h2>{{ section.settings.heading }}</h2>
+      <p class="text-muted">{{ section.settings.subheading }}</p>
+    </div>
+
+    {% if settings.prelaunch_mode and settings.founder_batch_text != blank %}
+      <p class="badge" style="margin-bottom: 1rem;">{{ settings.founder_batch_text }}</p>
+    {% endif %}
+
+    <div class="grid pricing-grid">
+      {% for block in section.blocks %}
+        <article class="card plan-card {% if block.settings.featured %}plan-card--featured{% endif %}" {{ block.shopify_attributes }}>
+          {% if block.settings.badge != blank %}
+            <span class="badge">{{ block.settings.badge }}</span>
+          {% endif %}
+          <h3 style="margin-top: 0.8rem;">{{ block.settings.name }}</h3>
+          <p class="plan-card__price">{{ block.settings.price }}</p>
+          <p class="plan-card__meta">{{ block.settings.meta }}</p>
+          <p class="text-muted">{{ block.settings.description }}</p>
+          <a class="btn {% unless block.settings.featured %}btn--secondary{% endunless %}" style="margin-top: 1rem;" href="{{ block.settings.link }}">{{ block.settings.cta }}</a>
+        </article>
+      {% endfor %}
+    </div>
+
+    <div class="notes-row">
+      <span class="note-chip">{{ section.settings.note_cancel }}</span>
+      <span class="note-chip">{{ section.settings.note_shipping }}</span>
+      <span class="note-chip">{{ section.settings.note_allergens }}</span>
+    </div>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Planes y precios",
+  "settings": [
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "Eyebrow",
+      "default": "Planes"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Título",
+      "default": "Elige la suscripción que mejor encaja contigo"
+    },
+    {
+      "type": "textarea",
+      "id": "subheading",
+      "label": "Subtítulo",
+      "default": "Todos los planes incluyen 3 blends, receta y QR video."
+    },
+    {
+      "type": "text",
+      "id": "note_cancel",
+      "label": "Nota cancelación",
+      "default": "Cancela en cualquier momento"
+    },
+    {
+      "type": "text",
+      "id": "note_shipping",
+      "label": "Nota envío",
+      "default": "Envío entre días 1 y 5 de cada mes"
+    },
+    {
+      "type": "text",
+      "id": "note_allergens",
+      "label": "Nota alérgenos",
+      "default": "Puede contener trazas de mostaza o sésamo"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "plan",
+      "name": "Plan",
+      "settings": [
+        {
+          "type": "text",
+          "id": "name",
+          "label": "Nombre",
+          "default": "Mensual"
+        },
+        {
+          "type": "text",
+          "id": "price",
+          "label": "Precio",
+          "default": "€19"
+        },
+        {
+          "type": "text",
+          "id": "meta",
+          "label": "Meta",
+          "default": "Facturación mensual"
+        },
+        {
+          "type": "textarea",
+          "id": "description",
+          "label": "Descripción",
+          "default": "Ideal para empezar y probar países cada mes."
+        },
+        {
+          "type": "text",
+          "id": "badge",
+          "label": "Badge",
+          "default": ""
+        },
+        {
+          "type": "text",
+          "id": "cta",
+          "label": "CTA",
+          "default": "Seleccionar plan"
+        },
+        {
+          "type": "url",
+          "id": "link",
+          "label": "Enlace CTA"
+        },
+        {
+          "type": "checkbox",
+          "id": "featured",
+          "label": "Destacar plan",
+          "default": false
+        }
+      ]
+    }
+  ],
+  "max_blocks": 3,
+  "presets": [
+    {
+      "name": "Planes y precios",
+      "blocks": [
+        {
+          "type": "plan",
+          "settings": {
+            "name": "Mensual",
+            "price": "€19",
+            "meta": "Renovación mensual",
+            "description": "Flexibilidad total para explorar sabores.",
+            "cta": "Comenzar mensual"
+          }
+        },
+        {
+          "type": "plan",
+          "settings": {
+            "name": "Trimestral",
+            "price": "€54",
+            "meta": "Ahorra frente al plan mensual",
+            "description": "Tres cajas con mejor precio por envío.",
+            "badge": "Ahorra",
+            "cta": "Elegir trimestral",
+            "featured": true
+          }
+        },
+        {
+          "type": "plan",
+          "settings": {
+            "name": "Anual",
+            "price": "€199",
+            "meta": "Máximo ahorro",
+            "description": "Ruta completa de 12 países con mejor tarifa.",
+            "badge": "Mejor valor",
+            "cta": "Elegir anual"
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

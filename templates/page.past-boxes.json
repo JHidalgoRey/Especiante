@@ -1,0 +1,16 @@
+{
+  "sections": {
+    "main": {
+      "type": "past-boxes",
+      "settings": {}
+    },
+    "email": {
+      "type": "email-capture",
+      "settings": {
+        "eyebrow": "Próximos países",
+        "heading": "Vota el próximo destino"
+      }
+    }
+  },
+  "order": ["main", "email"]
+}

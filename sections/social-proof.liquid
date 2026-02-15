@@ -1,0 +1,146 @@
+<section class="section-shell">
+  <div class="page-width reveal">
+    <div class="section-intro">
+      <span class="eyebrow">{{ section.settings.eyebrow }}</span>
+      <h2>{{ section.settings.heading }}</h2>
+      <p class="text-muted">{{ section.settings.subheading }}</p>
+    </div>
+
+    <div class="grid ugc-grid">
+      {% for block in section.blocks %}
+        {% if block.type == 'ugc' %}
+          <figure class="ugc-item card" {{ block.shopify_attributes }}>
+            {% if block.settings.image != blank %}
+              {{ block.settings.image | image_url: width: 700 | image_tag: widths: '320,480,700', loading: 'lazy', alt: block.settings.alt }}
+            {% else %}
+              <div class="media-placeholder">
+                <span>UGC sin rostro: manos cocinando, especias en mesa, plato final.</span>
+              </div>
+            {% endif %}
+            {% if block.settings.caption != blank %}
+              <figcaption style="padding-top: 0.8rem;" class="text-muted">{{ block.settings.caption }}</figcaption>
+            {% endif %}
+          </figure>
+        {% endif %}
+      {% endfor %}
+    </div>
+
+    <div class="grid grid--3" style="margin-top: 1.3rem;">
+      {% for block in section.blocks %}
+        {% if block.type == 'testimonial' %}
+          <blockquote class="card" {{ block.shopify_attributes }}>
+            <p>"{{ block.settings.quote }}"</p>
+            <footer class="text-muted" style="font-size: 0.86rem;">{{ block.settings.author }}</footer>
+          </blockquote>
+        {% endif %}
+      {% endfor %}
+    </div>
+
+    <div class="review-snippet">
+      <strong>{{ section.settings.reviews_heading }}</strong>
+      <p class="text-muted">{{ section.settings.reviews_text }}</p>
+      {% for block in section.blocks %}
+        {% if block.type == '@app' %}
+          {% render block %}
+        {% endif %}
+      {% endfor %}
+    </div>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Prueba social",
+  "settings": [
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "Eyebrow",
+      "default": "Comunidad"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Título",
+      "default": "Cómo lo cocinan en casa"
+    },
+    {
+      "type": "textarea",
+      "id": "subheading",
+      "label": "Subtítulo",
+      "default": "Fotos reales y opiniones cortas para validar sabor, facilidad y consistencia."
+    },
+    {
+      "type": "text",
+      "id": "reviews_heading",
+      "label": "Título módulo reseñas",
+      "default": "Reseñas verificadas"
+    },
+    {
+      "type": "textarea",
+      "id": "reviews_text",
+      "label": "Texto módulo reseñas",
+      "default": "Compatible con apps como Judge.me, Loox o Yotpo mediante bloque de app."
+    }
+  ],
+  "blocks": [
+    {
+      "type": "ugc",
+      "name": "Foto UGC",
+      "settings": [
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Imagen"
+        },
+        {
+          "type": "text",
+          "id": "alt",
+          "label": "Alt",
+          "default": "Preparación de receta con especias"
+        },
+        {
+          "type": "text",
+          "id": "caption",
+          "label": "Caption",
+          "default": "Preparación real en 25 min"
+        }
+      ]
+    },
+    {
+      "type": "testimonial",
+      "name": "Testimonio",
+      "settings": [
+        {
+          "type": "textarea",
+          "id": "quote",
+          "label": "Cita",
+          "default": "La guía QR hace que todo sea simple y el sabor queda redondo."
+        },
+        {
+          "type": "text",
+          "id": "author",
+          "label": "Autor",
+          "default": "Cliente suscriptora"
+        }
+      ]
+    },
+    {
+      "type": "@app"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Prueba social",
+      "blocks": [
+        { "type": "ugc" },
+        { "type": "ugc" },
+        { "type": "ugc" },
+        { "type": "testimonial" },
+        { "type": "testimonial" },
+        { "type": "testimonial" }
+      ]
+    }
+  ]
+}
+{% endschema %}

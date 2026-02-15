@@ -1,0 +1,168 @@
+<section class="section-shell">
+  <div class="page-width reveal">
+    <div class="section-intro">
+      <span class="eyebrow">{{ section.settings.eyebrow }}</span>
+      <h2>{{ section.settings.heading }}</h2>
+    </div>
+
+    <div class="country-feature">
+      <div class="card">
+        <h3>{{ section.settings.country_name }}</h3>
+        <p class="text-muted">{{ section.settings.country_story }}</p>
+
+        <div class="grid" style="margin-top: 1rem;">
+          {% for block in section.blocks %}
+            <article class="card blend-card" {{ block.shopify_attributes }}>
+              <h3>{{ block.settings.name }}</h3>
+              <p class="text-muted">{{ block.settings.notes }}</p>
+              {% if block.settings.heat != blank %}
+                <p class="badge" style="margin-top: 0.8rem;">{{ block.settings.heat }}</p>
+              {% endif %}
+            </article>
+          {% endfor %}
+        </div>
+
+        <div class="card" style="margin-top: 1rem;">
+          <h3>{{ section.settings.recipe_title }}</h3>
+          <p class="text-muted">{{ section.settings.recipe_preview }}</p>
+        </div>
+
+        <a href="{{ section.settings.cta_link }}" class="btn" style="margin-top: 1.2rem;">{{ section.settings.cta_label }}</a>
+      </div>
+
+      <div>
+        {% if section.settings.image != blank %}
+          {{ section.settings.image | image_url: width: 1200 | image_tag: widths: '560,760,960,1200', class: 'card', loading: 'lazy', alt: section.settings.image_alt }}
+        {% else %}
+          <div class="media-placeholder">
+            <span>Dirección de arte: especias del país en cucharas, receta impresa y packaging abierto.</span>
+          </div>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "País del mes",
+  "settings": [
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "Eyebrow",
+      "default": "Caja del mes"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Título",
+      "default": "Descubre el país de este mes"
+    },
+    {
+      "type": "text",
+      "id": "country_name",
+      "label": "Nombre del país",
+      "default": "Marruecos"
+    },
+    {
+      "type": "textarea",
+      "id": "country_story",
+      "label": "Historia breve",
+      "default": "Una ruta aromática entre zocos y cocinas familiares. Notas cálidas, cítricas y ahumadas para platos profundos sin complicarte."
+    },
+    {
+      "type": "text",
+      "id": "recipe_title",
+      "label": "Título receta",
+      "default": "Receta destacada: Cuscús especiado con verduras"
+    },
+    {
+      "type": "textarea",
+      "id": "recipe_preview",
+      "label": "Preview receta",
+      "default": "Tarjeta paso a paso + QR video para resolver técnica, textura y emplatado."
+    },
+    {
+      "type": "text",
+      "id": "cta_label",
+      "label": "Texto CTA",
+      "default": "Quiero la caja de este mes"
+    },
+    {
+      "type": "url",
+      "id": "cta_link",
+      "label": "Enlace CTA"
+    },
+    {
+      "type": "image_picker",
+      "id": "image",
+      "label": "Imagen del módulo"
+    },
+    {
+      "type": "text",
+      "id": "image_alt",
+      "label": "Alt imagen",
+      "default": "Caja mensual de especias y receta"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "blend",
+      "name": "Blend",
+      "settings": [
+        {
+          "type": "text",
+          "id": "name",
+          "label": "Nombre",
+          "default": "Ras el Hanout"
+        },
+        {
+          "type": "textarea",
+          "id": "notes",
+          "label": "Notas de cata",
+          "default": "Canela, comino y pimienta negra. Redondo, aromático y complejo."
+        },
+        {
+          "type": "text",
+          "id": "heat",
+          "label": "Nivel de intensidad",
+          "default": "Intensidad: media"
+        }
+      ]
+    }
+  ],
+  "max_blocks": 3,
+  "presets": [
+    {
+      "name": "País del mes",
+      "blocks": [
+        {
+          "type": "blend",
+          "settings": {
+            "name": "Ras el Hanout",
+            "notes": "Cálido y floral, perfecto para cuscús.",
+            "heat": "Intensidad: media"
+          }
+        },
+        {
+          "type": "blend",
+          "settings": {
+            "name": "Chermoula",
+            "notes": "Cítrico-herbal, ideal en pescado y verduras.",
+            "heat": "Intensidad: suave"
+          }
+        },
+        {
+          "type": "blend",
+          "settings": {
+            "name": "Harissa seca",
+            "notes": "Picor limpio con fondo ahumado.",
+            "heat": "Intensidad: alta"
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

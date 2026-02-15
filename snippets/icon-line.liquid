@@ -1,0 +1,26 @@
+{% case icon %}
+  {% when 'globe' %}
+    <svg viewBox="0 0 24 24" class="icon-line" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3a14 14 0 0 1 0 18M12 3a14 14 0 0 0 0 18"/></svg>
+  {% when 'box' %}
+    <svg viewBox="0 0 24 24" class="icon-line" aria-hidden="true"><path d="M3 7.5 12 3l9 4.5v9L12 21l-9-4.5z"/><path d="M3 7.5 12 12l9-4.5M12 12v9"/></svg>
+  {% when 'pan' %}
+    <svg viewBox="0 0 24 24" class="icon-line" aria-hidden="true"><path d="M4 12h10a4 4 0 0 1 4 4v1H4z"/><path d="M18 16h3"/><path d="M8 8V5"/></svg>
+  {% when 'leaf' %}
+    <svg viewBox="0 0 24 24" class="icon-line" aria-hidden="true"><path d="M20 4c-8 0-14 6-14 14 8 0 14-6 14-14z"/><path d="M6 18c2-3 5-5 8-8"/></svg>
+  {% when 'star' %}
+    <svg viewBox="0 0 24 24" class="icon-line" aria-hidden="true"><path d="m12 3 2.8 5.6 6.2.9-4.5 4.4 1.1 6.2L12 17.2 6.4 20l1.1-6.2L3 9.5l6.2-.9z"/></svg>
+  {% when 'truck' %}
+    <svg viewBox="0 0 24 24" class="icon-line" aria-hidden="true"><path d="M3 6h11v9H3z"/><path d="M14 9h4l3 3v3h-7z"/><circle cx="8" cy="17" r="1.8"/><circle cx="18" cy="17" r="1.8"/></svg>
+  {% when 'shield' %}
+    <svg viewBox="0 0 24 24" class="icon-line" aria-hidden="true"><path d="M12 3 5 6v6c0 5 3.4 8 7 9 3.6-1 7-4 7-9V6z"/><path d="m9.5 12 1.8 1.8 3.4-3.6"/></svg>
+  {% when 'clock' %}
+    <svg viewBox="0 0 24 24" class="icon-line" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>
+  {% when 'gift' %}
+    <svg viewBox="0 0 24 24" class="icon-line" aria-hidden="true"><path d="M3 10h18v11H3z"/><path d="M12 10v11M3 14h18"/><path d="M12 10c0-2.8-4.5-4.4-5.7-2.2-.8 1.6.7 2.2 2.5 2.2zM12 10c0-2.8 4.5-4.4 5.7-2.2.8 1.6-.7 2.2-2.5 2.2z"/></svg>
+  {% when 'play' %}
+    <svg viewBox="0 0 24 24" class="icon-line" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="m10 8 6 4-6 4z"/></svg>
+  {% when 'passport' %}
+    <svg viewBox="0 0 24 24" class="icon-line" aria-hidden="true"><rect x="6" y="3" width="12" height="18" rx="2"/><path d="M9 8h6M9 12h6M9 16h4"/></svg>
+  {% else %}
+    <svg viewBox="0 0 24 24" class="icon-line" aria-hidden="true"><circle cx="12" cy="12" r="9"/></svg>
+{% endcase %}

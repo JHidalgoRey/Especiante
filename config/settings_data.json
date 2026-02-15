@@ -1,0 +1,16 @@
+{
+  "current": {
+    "color_background": "#f6f2ea",
+    "color_surface": "#fffdf8",
+    "color_text": "#1c1c1a",
+    "color_muted": "#5a574f",
+    "color_accent": "#1f1f1f",
+    "color_gold": "#b89353",
+    "heading_font": "times_new_roman_n4",
+    "body_font": "helvetica_n4",
+    "section_spacing": 88,
+    "button_radius": 14,
+    "prelaunch_mode": false,
+    "founder_batch_text": "Founder Batch — Limitado a 150"
+  }
+}

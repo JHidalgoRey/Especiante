@@ -1,0 +1,75 @@
+<section class="section-shell">
+  <div class="page-width reveal">
+    <div class="section-intro">
+      <span class="eyebrow">{{ section.settings.eyebrow }}</span>
+      <h1>{{ section.settings.heading }}</h1>
+      <p class="text-muted">{{ section.settings.subheading }}</p>
+    </div>
+
+    <div class="accordion-list">
+      {% for block in section.blocks %}
+        {% assign panel_id = 'FaqPage-' | append: section.id | append: '-' | append: forloop.index %}
+        <div class="accordion-item" {{ block.shopify_attributes }}>
+          <button type="button" class="accordion-trigger" aria-expanded="{% if forloop.first %}true{% else %}false{% endif %}" aria-controls="{{ panel_id }}">{{ block.settings.question }}</button>
+          <div id="{{ panel_id }}" class="accordion-panel" {% unless forloop.first %}hidden{% endunless %}>{{ block.settings.answer }}</div>
+        </div>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "FAQ",
+  "settings": [
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "Eyebrow",
+      "default": "FAQ"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Título",
+      "default": "Preguntas frecuentes"
+    },
+    {
+      "type": "textarea",
+      "id": "subheading",
+      "label": "Subtítulo",
+      "default": "Información clave de suscripción, envíos, pagos y producto."
+    }
+  ],
+  "blocks": [
+    {
+      "type": "item",
+      "name": "Pregunta",
+      "settings": [
+        {
+          "type": "text",
+          "id": "question",
+          "label": "Pregunta",
+          "default": "¿Puedo saltar un mes?"
+        },
+        {
+          "type": "richtext",
+          "id": "answer",
+          "label": "Respuesta",
+          "default": "<p>Sí, desde tu cuenta puedes pausar o saltar un envío.</p>"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "FAQ",
+      "blocks": [
+        { "type": "item" },
+        { "type": "item", "settings": { "question": "¿Realizan envíos internacionales?", "answer": "<p>Actualmente enviamos a península y principales ciudades de la UE.</p>" } },
+        { "type": "item", "settings": { "question": "¿Cómo gestiono mi suscripción?", "answer": "<p>Desde tu área de cliente puedes cambiar plan, dirección o método de pago.</p>" } }
+      ]
+    }
+  ]
+}
+{% endschema %}

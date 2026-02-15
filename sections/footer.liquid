@@ -1,0 +1,133 @@
+<footer class="site-footer" role="contentinfo">
+  <div class="page-width">
+    <div class="site-footer__grid">
+      <div>
+        <h3>{{ shop.name }}</h3>
+        <p class="text-muted">{{ section.settings.brand_description }}</p>
+        {% if section.settings.show_newsletter %}
+          {% form 'customer', id: 'FooterNewsletter', class: 'newsletter-form' %}
+            <input type="hidden" name="contact[tags]" value="footer-newsletter">
+            <label for="FooterEmail" class="visually-hidden">{{ section.settings.newsletter_heading }}</label>
+            <div class="form-row">
+              <input id="FooterEmail" class="input" type="email" name="contact[email]" required autocomplete="email" placeholder="Tu email">
+              <button type="submit" class="btn btn--light">Suscribirme</button>
+            </div>
+          {% endform %}
+        {% endif %}
+      </div>
+
+      <div>
+        <h4>{{ section.settings.links_heading }}</h4>
+        <ul class="link-list">
+          {% if section.settings.menu != blank %}
+            {% for link in section.settings.menu.links %}
+              <li><a href="{{ link.url }}">{{ link.title }}</a></li>
+            {% endfor %}
+          {% endif %}
+        </ul>
+      </div>
+
+      <div>
+        <h4>{{ section.settings.legal_heading }}</h4>
+        <ul class="link-list">
+          {% if section.settings.legal_menu != blank %}
+            {% for link in section.settings.legal_menu.links %}
+              <li><a href="{{ link.url }}">{{ link.title }}</a></li>
+            {% endfor %}
+          {% else %}
+            <li><a href="{{ routes.search_url }}">Buscar</a></li>
+            <li><a href="{{ routes.cart_url }}">Carrito</a></li>
+          {% endif %}
+        </ul>
+
+        <h4 style="margin-top: 1.3rem;">{{ section.settings.social_heading }}</h4>
+        <ul class="link-list">
+          {% if section.settings.instagram_url != blank %}<li><a href="{{ section.settings.instagram_url }}">Instagram</a></li>{% endif %}
+          {% if section.settings.tiktok_url != blank %}<li><a href="{{ section.settings.tiktok_url }}">TikTok</a></li>{% endif %}
+          {% if section.settings.youtube_url != blank %}<li><a href="{{ section.settings.youtube_url }}">YouTube</a></li>{% endif %}
+        </ul>
+      </div>
+    </div>
+
+    <div class="footer-meta">
+      <span>&copy; {{ 'now' | date: '%Y' }} {{ shop.name }}.</span>
+      <span>{{ section.settings.footer_note }}</span>
+    </div>
+  </div>
+</footer>
+
+{% schema %}
+{
+  "name": "Pie de página",
+  "settings": [
+    {
+      "type": "textarea",
+      "id": "brand_description",
+      "label": "Descripción de marca",
+      "default": "Suscripción mensual de especias del mundo con recetas guiadas y video QR."
+    },
+    {
+      "type": "checkbox",
+      "id": "show_newsletter",
+      "label": "Mostrar newsletter",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "newsletter_heading",
+      "label": "Título newsletter",
+      "default": "Recibe novedades y drops limitados"
+    },
+    {
+      "type": "text",
+      "id": "links_heading",
+      "label": "Título columna enlaces",
+      "default": "Explorar"
+    },
+    {
+      "type": "link_list",
+      "id": "menu",
+      "label": "Menú de enlaces",
+      "default": "footer"
+    },
+    {
+      "type": "text",
+      "id": "legal_heading",
+      "label": "Título columna legal",
+      "default": "Información"
+    },
+    {
+      "type": "link_list",
+      "id": "legal_menu",
+      "label": "Menú legal"
+    },
+    {
+      "type": "text",
+      "id": "social_heading",
+      "label": "Título sociales",
+      "default": "Social"
+    },
+    {
+      "type": "url",
+      "id": "instagram_url",
+      "label": "Instagram"
+    },
+    {
+      "type": "url",
+      "id": "tiktok_url",
+      "label": "TikTok"
+    },
+    {
+      "type": "url",
+      "id": "youtube_url",
+      "label": "YouTube"
+    },
+    {
+      "type": "text",
+      "id": "footer_note",
+      "label": "Nota de pie",
+      "default": "Envío mensual • Cancela cuando quieras • Soporte rápido"
+    }
+  ]
+}
+{% endschema %}

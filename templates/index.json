@@ -1,0 +1,47 @@
+{
+  "sections": {
+    "hero": {
+      "type": "hero-subscription",
+      "blocks": {
+        "trust-1": { "type": "trust", "settings": { "text": "Envío mensual" } },
+        "trust-2": { "type": "trust", "settings": { "text": "Cancela cuando quieras" } },
+        "trust-3": { "type": "trust", "settings": { "text": "Drops estacionales limitados" } }
+      },
+      "block_order": ["trust-1", "trust-2", "trust-3"],
+      "settings": {}
+    },
+    "how": {
+      "type": "how-it-works",
+      "settings": {}
+    },
+    "country": {
+      "type": "country-feature",
+      "settings": {}
+    },
+    "inside": {
+      "type": "box-contents",
+      "settings": {}
+    },
+    "benefits": {
+      "type": "benefits",
+      "settings": {}
+    },
+    "proof": {
+      "type": "social-proof",
+      "settings": {}
+    },
+    "pricing": {
+      "type": "pricing-plans",
+      "settings": {}
+    },
+    "gift": {
+      "type": "gift-module",
+      "settings": {}
+    },
+    "email": {
+      "type": "email-capture",
+      "settings": {}
+    }
+  },
+  "order": ["hero", "how", "country", "inside", "benefits", "proof", "pricing", "gift", "email"]
+}

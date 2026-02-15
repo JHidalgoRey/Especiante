@@ -1,0 +1,554 @@
+{% liquid
+  assign selected_variant = product.selected_or_first_available_variant
+  if selected_variant == blank and product.variants.size > 0
+    assign selected_variant = product.variants.first
+  endif
+  assign first_plan_label = 'Plan mensual'
+  assign first_plan_price = product.price | money
+  if selected_variant != blank
+    assign first_plan_price = selected_variant.price | money
+  endif
+  assign first_plan_frequency = 'Entrega mensual'
+  assign first_plan_variant_id = ''
+  if selected_variant != blank
+    assign first_plan_variant_id = selected_variant.id
+  endif
+
+  for block in section.blocks
+    if block.type == 'plan'
+      assign first_plan_label = block.settings.label
+      assign first_plan_price = block.settings.price
+      assign first_plan_frequency = block.settings.frequency
+      if block.settings.variant_id != blank
+        assign first_plan_variant_id = block.settings.variant_id
+      endif
+      break
+    endif
+  endfor
+%}
+
+<section class="section-shell">
+  <div class="page-width reveal">
+    <div class="product-hero">
+      <div class="product-gallery">
+        {% if product.featured_media != blank %}
+          <div class="product-gallery__main">
+            {{ product.featured_media | image_url: width: 1400 | image_tag: widths: '420,640,960,1400', loading: 'eager', alt: product.title }}
+          </div>
+        {% else %}
+          <div class="product-gallery__main">
+            <div class="media-placeholder">
+              <span>Dirección de arte: macro de especias, receta abierta y caja premium sin ruido visual.</span>
+            </div>
+          </div>
+        {% endif %}
+
+        {% if product.media.size > 1 %}
+          <div class="grid grid--3">
+            {% for media in product.media limit: 3 %}
+              <div class="product-gallery__thumb">
+                {{ media | image_url: width: 420 | image_tag: widths: '160,240,420', loading: 'lazy', alt: product.title }}
+              </div>
+            {% endfor %}
+          </div>
+        {% endif %}
+      </div>
+
+      <div>
+        <span class="eyebrow">{{ section.settings.eyebrow }}</span>
+        <h1>{{ product.title }}</h1>
+        <p class="product-promise">{{ section.settings.promise }}</p>
+
+        {% if settings.prelaunch_mode and settings.founder_batch_text != blank %}
+          <p class="badge" style="margin-bottom: 1rem;">{{ settings.founder_batch_text }}</p>
+        {% endif %}
+
+        {% unless settings.prelaunch_mode %}
+          <div class="product-form" data-product-form>
+            <div class="plan-selector" data-plan-selector>
+              {% assign first_plan_rendered = false %}
+              {% for block in section.blocks %}
+                {% if block.type == 'plan' %}
+                  {% assign variant_id = first_plan_variant_id %}
+                  {% if block.settings.variant_id != blank %}
+                    {% assign variant_id = block.settings.variant_id %}
+                  {% endif %}
+                  {% assign is_default_plan = false %}
+                  {% unless first_plan_rendered %}
+                    {% assign is_default_plan = true %}
+                    {% assign first_plan_rendered = true %}
+                  {% endunless %}
+                  <div class="plan-option {% if is_default_plan %}is-selected{% endif %}" {{ block.shopify_attributes }}>
+                    <input
+                      type="radio"
+                      id="Plan-{{ section.id }}-{{ block.id }}"
+                      name="plan-{{ section.id }}"
+                      {% if is_default_plan %}checked{% endif %}
+                      data-plan-label="{{ block.settings.label | escape }}"
+                      data-plan-price="{{ block.settings.price | escape }}"
+                      data-plan-frequency="{{ block.settings.frequency | escape }}"
+                      data-variant-id="{{ variant_id }}"
+                    >
+                    <label class="plan-option__label" for="Plan-{{ section.id }}-{{ block.id }}">
+                      <span>
+                        <span class="plan-option__title">{{ block.settings.label }}</span>
+                        <span class="plan-option__desc">{{ block.settings.description }}</span>
+                      </span>
+                      <span style="text-align: right;">
+                        <strong>{{ block.settings.price }}</strong>
+                        {% if block.settings.badge != blank %}
+                          <span class="badge" style="margin-top: 0.3rem;">{{ block.settings.badge }}</span>
+                        {% endif %}
+                      </span>
+                    </label>
+                  </div>
+                {% endif %}
+              {% endfor %}
+
+              <p class="plan-selector__meta">
+                Frecuencia: <span data-live-frequency>{{ first_plan_frequency }}</span><br>
+                Próximo envío: <strong>{{ section.settings.next_ship_date }}</strong>
+              </p>
+
+              {% form 'product', product, id: 'ProductForm-' | append: section.id, novalidate: 'novalidate' %}
+                <input type="hidden" name="id" value="{{ first_plan_variant_id }}" data-variant-input>
+                <input type="hidden" name="quantity" value="1">
+
+                <div class="product-form__row">
+                  <span class="price-live" data-live-price>{{ first_plan_price }}</span>
+                  <button type="submit" name="add" class="btn">{{ section.settings.subscribe_button_label }}</button>
+                </div>
+              {% endform %}
+
+              <div class="app-placeholder">
+                <strong>{{ section.settings.subscription_app_title }}</strong>
+                <p>{{ section.settings.subscription_app_copy }}</p>
+                {% for block in section.blocks %}
+                  {% if block.type == '@app' %}
+                    {% render block %}
+                  {% endif %}
+                {% endfor %}
+              </div>
+            </div>
+          </div>
+        {% else %}
+          <div class="product-form" data-product-form>
+            {% form 'customer', class: 'newsletter-form' %}
+              <input type="hidden" name="contact[tags]" value="waitlist,product-page">
+              <div class="form-row">
+                <input class="input" type="email" name="contact[email]" required placeholder="{{ section.settings.waitlist_email_placeholder }}">
+                <button type="submit" class="btn">{{ section.settings.waitlist_button }}</button>
+              </div>
+              <label for="ProductCountry-{{ section.id }}" class="text-muted">{{ section.settings.waitlist_country_label }}</label>
+              <input id="ProductCountry-{{ section.id }}" class="input" type="text" name="contact[preferencia_pais]" placeholder="{{ section.settings.waitlist_country_placeholder }}">
+            {% endform %}
+          </div>
+        {% endunless %}
+
+        <div class="trust-badges" aria-label="Badges de confianza">
+          {% for block in section.blocks %}
+            {% if block.type == 'trust' %}
+              <span class="trust-badge" {{ block.shopify_attributes }}>
+                {% render 'icon-line', icon: block.settings.icon %}
+                {{ block.settings.text }}
+              </span>
+            {% endif %}
+          {% endfor %}
+        </div>
+      </div>
+    </div>
+
+    <div class="grid product-detail-grid">
+      {% for block in section.blocks %}
+        {% if block.type == 'inside' %}
+          <article class="card" {{ block.shopify_attributes }}>
+            {% if block.settings.image != blank %}
+              {{ block.settings.image | image_url: width: 520 | image_tag: widths: '260,380,520', loading: 'lazy', alt: block.settings.title }}
+            {% else %}
+              <div class="media-placeholder" style="min-height: 150px;">Imagen de {{ block.settings.title }}</div>
+            {% endif %}
+            <h3 style="margin-top: 0.8rem;">{{ block.settings.title }}</h3>
+            <p class="text-muted">{{ block.settings.text }}</p>
+          </article>
+        {% endif %}
+      {% endfor %}
+    </div>
+
+    <div class="grid" style="margin-top: 2.2rem; gap: 2rem;">
+      <div>
+        <h2>{{ section.settings.how_accordion_title }}</h2>
+        <div class="accordion-list">
+          {% assign how_index = 0 %}
+          {% for block in section.blocks %}
+            {% if block.type == 'accordion' and block.settings.group == 'how' %}
+              {% assign how_index = how_index | plus: 1 %}
+              {% assign panel_id = 'HowAccordion-' | append: section.id | append: '-' | append: how_index %}
+              <div class="accordion-item" {{ block.shopify_attributes }}>
+                <button class="accordion-trigger" type="button" aria-expanded="{% if how_index == 1 %}true{% else %}false{% endif %}" aria-controls="{{ panel_id }}">
+                  {{ block.settings.title }}
+                </button>
+                <div id="{{ panel_id }}" class="accordion-panel" {% unless how_index == 1 %}hidden{% endunless %}>
+                  {{ block.settings.content }}
+                </div>
+              </div>
+            {% endif %}
+          {% endfor %}
+        </div>
+      </div>
+
+      <div>
+        <h2>{{ section.settings.shipping_accordion_title }}</h2>
+        <div class="accordion-list">
+          {% assign shipping_index = 0 %}
+          {% for block in section.blocks %}
+            {% if block.type == 'accordion' and block.settings.group == 'shipping' %}
+              {% assign shipping_index = shipping_index | plus: 1 %}
+              {% assign panel_id = 'ShippingAccordion-' | append: section.id | append: '-' | append: shipping_index %}
+              <div class="accordion-item" {{ block.shopify_attributes }}>
+                <button class="accordion-trigger" type="button" aria-expanded="{% if shipping_index == 1 %}true{% else %}false{% endif %}" aria-controls="{{ panel_id }}">
+                  {{ block.settings.title }}
+                </button>
+                <div id="{{ panel_id }}" class="accordion-panel" {% unless shipping_index == 1 %}hidden{% endunless %}>
+                  {{ block.settings.content }}
+                </div>
+              </div>
+            {% endif %}
+          {% endfor %}
+        </div>
+      </div>
+    </div>
+
+    <div style="margin-top: 2.2rem;">
+      <h2>{{ section.settings.faq_title }}</h2>
+      <div class="accordion-list">
+        {% assign faq_index = 0 %}
+        {% for block in section.blocks %}
+          {% if block.type == 'faq' %}
+            {% assign faq_index = faq_index | plus: 1 %}
+            {% assign panel_id = 'FaqAccordion-' | append: section.id | append: '-' | append: faq_index %}
+            <div class="accordion-item" {{ block.shopify_attributes }}>
+              <button class="accordion-trigger" type="button" aria-expanded="false" aria-controls="{{ panel_id }}">
+                {{ block.settings.question }}
+              </button>
+              <div id="{{ panel_id }}" class="accordion-panel" hidden>
+                {{ block.settings.answer }}
+              </div>
+            </div>
+          {% endif %}
+        {% endfor %}
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="mobile-sticky-cta" aria-hidden="false">
+  <div class="mobile-sticky-cta__inner">
+    <div class="mobile-sticky-cta__meta">
+      <strong data-sticky-price>{{ first_plan_price }}</strong>
+      <span class="mobile-sticky-cta__plan" data-sticky-plan>{{ first_plan_label }}</span>
+    </div>
+    <button class="btn" data-sticky-subscribe>
+      {% if settings.prelaunch_mode %}{{ section.settings.waitlist_button }}{% else %}{{ section.settings.subscribe_button_label }}{% endif %}
+    </button>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Producto suscripción",
+  "settings": [
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "Eyebrow",
+      "default": "Caja mensual World Spices"
+    },
+    {
+      "type": "textarea",
+      "id": "promise",
+      "label": "Promesa corta",
+      "default": "3 blends + recetas + video QR para cocinar una receta insignia en 20-30 minutos."
+    },
+    {
+      "type": "text",
+      "id": "next_ship_date",
+      "label": "Próxima fecha de envío",
+      "default": "5 de cada mes"
+    },
+    {
+      "type": "text",
+      "id": "subscribe_button_label",
+      "label": "Texto botón suscribir",
+      "default": "Suscribirme ahora"
+    },
+    {
+      "type": "text",
+      "id": "subscription_app_title",
+      "label": "Título integración suscripción",
+      "default": "Integración de suscripción"
+    },
+    {
+      "type": "textarea",
+      "id": "subscription_app_copy",
+      "label": "Texto integración suscripción",
+      "default": "Espacio para bloques de Recharge, Appstle o Skio. Arrastra aquí el bloque de app desde Theme Editor."
+    },
+    {
+      "type": "text",
+      "id": "how_accordion_title",
+      "label": "Título acordeón cómo funciona",
+      "default": "Cómo funciona"
+    },
+    {
+      "type": "text",
+      "id": "shipping_accordion_title",
+      "label": "Título acordeón envíos y devoluciones",
+      "default": "Envíos y devoluciones"
+    },
+    {
+      "type": "text",
+      "id": "faq_title",
+      "label": "Título FAQ",
+      "default": "Preguntas frecuentes"
+    },
+    {
+      "type": "text",
+      "id": "waitlist_email_placeholder",
+      "label": "Placeholder email pre-lanzamiento",
+      "default": "Tu email para acceso anticipado"
+    },
+    {
+      "type": "text",
+      "id": "waitlist_button",
+      "label": "Botón lista de espera",
+      "default": "Unirme a la lista"
+    },
+    {
+      "type": "text",
+      "id": "waitlist_country_label",
+      "label": "Etiqueta país preferido",
+      "default": "¿Qué país te interesa primero?"
+    },
+    {
+      "type": "text",
+      "id": "waitlist_country_placeholder",
+      "label": "Placeholder país preferido",
+      "default": "Ej. India"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "plan",
+      "name": "Plan selector",
+      "settings": [
+        {
+          "type": "text",
+          "id": "label",
+          "label": "Nombre del plan",
+          "default": "Mensual"
+        },
+        {
+          "type": "text",
+          "id": "price",
+          "label": "Precio",
+          "default": "€19"
+        },
+        {
+          "type": "text",
+          "id": "frequency",
+          "label": "Frecuencia",
+          "default": "Entrega mensual"
+        },
+        {
+          "type": "textarea",
+          "id": "description",
+          "label": "Descripción",
+          "default": "Renovación mes a mes."
+        },
+        {
+          "type": "text",
+          "id": "badge",
+          "label": "Badge",
+          "default": ""
+        },
+        {
+          "type": "text",
+          "id": "variant_id",
+          "label": "ID variante asociada (opcional)"
+        }
+      ]
+    },
+    {
+      "type": "inside",
+      "name": "Qué incluye",
+      "settings": [
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Imagen"
+        },
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Título",
+          "default": "Blend principal"
+        },
+        {
+          "type": "textarea",
+          "id": "text",
+          "label": "Descripción",
+          "default": "Perfil base del país con notas de cata y usos sugeridos."
+        }
+      ]
+    },
+    {
+      "type": "accordion",
+      "name": "Acordeón",
+      "settings": [
+        {
+          "type": "select",
+          "id": "group",
+          "label": "Grupo",
+          "default": "how",
+          "options": [
+            { "value": "how", "label": "Cómo funciona" },
+            { "value": "shipping", "label": "Envíos y devoluciones" }
+          ]
+        },
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Título",
+          "default": "¿Cómo recibo mi caja?"
+        },
+        {
+          "type": "richtext",
+          "id": "content",
+          "label": "Contenido",
+          "default": "<p>Se envía una caja por mes con blends, receta y QR.</p>"
+        }
+      ]
+    },
+    {
+      "type": "faq",
+      "name": "FAQ",
+      "settings": [
+        {
+          "type": "text",
+          "id": "question",
+          "label": "Pregunta",
+          "default": "¿Puedo cancelar?"
+        },
+        {
+          "type": "richtext",
+          "id": "answer",
+          "label": "Respuesta",
+          "default": "<p>Sí. Puedes pausar o cancelar desde tu cuenta cuando quieras.</p>"
+        }
+      ]
+    },
+    {
+      "type": "trust",
+      "name": "Sello confianza",
+      "settings": [
+        {
+          "type": "select",
+          "id": "icon",
+          "label": "Ícono",
+          "default": "shield",
+          "options": [
+            { "value": "shield", "label": "Checkout seguro" },
+            { "value": "clock", "label": "Cancela cuando quieras" },
+            { "value": "truck", "label": "Soporte rápido" }
+          ]
+        },
+        {
+          "type": "text",
+          "id": "text",
+          "label": "Texto",
+          "default": "Checkout seguro"
+        }
+      ]
+    },
+    {
+      "type": "@app"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Producto suscripción",
+      "blocks": [
+        {
+          "type": "plan",
+          "settings": {
+            "label": "Mensual",
+            "price": "€19",
+            "frequency": "Entrega mensual",
+            "description": "Pago mensual, cancela en cualquier momento."
+          }
+        },
+        {
+          "type": "plan",
+          "settings": {
+            "label": "Trimestral",
+            "price": "€54",
+            "frequency": "Cada 3 meses",
+            "description": "3 cajas por ciclo con ahorro.",
+            "badge": "Ahorra"
+          }
+        },
+        {
+          "type": "plan",
+          "settings": {
+            "label": "Anual",
+            "price": "€199",
+            "frequency": "Anual (12 cajas)",
+            "description": "Mejor precio por caja.",
+            "badge": "Mejor valor"
+          }
+        },
+        { "type": "inside", "settings": { "title": "3 blends", "text": "Notas de cata y nivel de intensidad por blend." } },
+        { "type": "inside", "settings": { "title": "Tarjeta receta", "text": "Pasos claros con tiempos reales y variantes." } },
+        { "type": "inside", "settings": { "title": "QR video", "text": "Guía visual para técnica y emplatado." } },
+        {
+          "type": "accordion",
+          "settings": {
+            "group": "how",
+            "title": "¿Cómo inicio?",
+            "content": "<p>Elige plan, confirma tu checkout y te enviamos la caja del mes actual.</p>"
+          }
+        },
+        {
+          "type": "accordion",
+          "settings": {
+            "group": "how",
+            "title": "¿Cuánto tarda cocinar?",
+            "content": "<p>La receta principal está diseñada para 20-30 minutos.</p>"
+          }
+        },
+        {
+          "type": "accordion",
+          "settings": {
+            "group": "shipping",
+            "title": "Política de envío",
+            "content": "<p>Despacho entre día 1 y 5 de cada mes. Recibirás tracking por email.</p>"
+          }
+        },
+        {
+          "type": "accordion",
+          "settings": {
+            "group": "shipping",
+            "title": "Cambios y devoluciones",
+            "content": "<p>Aceptamos cambios por daño en tránsito reportado en 48 horas.</p>"
+          }
+        },
+        { "type": "faq" },
+        { "type": "faq", "settings": { "question": "¿Incluye alérgenos?", "answer": "<p>Revisa la etiqueta de cada blend. Puede contener trazas de mostaza o sésamo.</p>" } },
+        { "type": "trust", "settings": { "icon": "shield", "text": "Checkout seguro" } },
+        { "type": "trust", "settings": { "icon": "clock", "text": "Cancela cuando quieras" } },
+        { "type": "trust", "settings": { "icon": "truck", "text": "Soporte rápido" } }
+      ]
+    }
+  ]
+}
+{% endschema %}

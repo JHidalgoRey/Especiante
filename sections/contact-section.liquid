@@ -1,0 +1,119 @@
+<section class="section-shell">
+  <div class="page-width reveal">
+    <div class="section-intro">
+      <span class="eyebrow">{{ section.settings.eyebrow }}</span>
+      <h1>{{ section.settings.heading }}</h1>
+      <p class="text-muted">{{ section.settings.subheading }}</p>
+    </div>
+
+    <div class="contact-grid">
+      <div>
+        {% form 'contact', class: 'contact-form' %}
+          {% if form.posted_successfully? %}
+            <p class="badge">{{ section.settings.success }}</p>
+          {% endif %}
+
+          {% if form.errors %}
+            <div class="app-placeholder" role="alert">{{ form.errors | default_errors }}</div>
+          {% endif %}
+
+          <div class="contact-form__name">
+            <input class="input" type="text" name="contact[first_name]" placeholder="Nombre" autocomplete="given-name">
+            <input class="input" type="text" name="contact[last_name]" placeholder="Apellido" autocomplete="family-name">
+          </div>
+          <input class="input" type="email" name="contact[email]" placeholder="Email" required autocomplete="email">
+          <input class="input" type="tel" name="contact[phone]" placeholder="Teléfono" autocomplete="tel">
+          <textarea name="contact[body]" rows="5" placeholder="{{ section.settings.message_placeholder }}" required></textarea>
+          <button class="btn" type="submit">{{ section.settings.button }}</button>
+        {% endform %}
+      </div>
+
+      <div class="card">
+        <h3>{{ section.settings.support_title }}</h3>
+        <p class="text-muted">{{ section.settings.support_text }}</p>
+        <p><strong>Email:</strong> <a href="mailto:{{ section.settings.support_email }}">{{ section.settings.support_email }}</a></p>
+        <p><strong>Horario:</strong> {{ section.settings.support_hours }}</p>
+        <p><strong>Respuesta:</strong> {{ section.settings.support_sla }}</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Contacto",
+  "settings": [
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "Eyebrow",
+      "default": "Contacto"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Título",
+      "default": "Estamos para ayudarte"
+    },
+    {
+      "type": "textarea",
+      "id": "subheading",
+      "label": "Subtítulo",
+      "default": "Consultas sobre suscripción, envíos, alérgenos o regalos."
+    },
+    {
+      "type": "text",
+      "id": "message_placeholder",
+      "label": "Placeholder mensaje",
+      "default": "¿En qué podemos ayudarte?"
+    },
+    {
+      "type": "text",
+      "id": "button",
+      "label": "Texto botón",
+      "default": "Enviar mensaje"
+    },
+    {
+      "type": "text",
+      "id": "success",
+      "label": "Mensaje éxito",
+      "default": "Gracias. Te responderemos pronto."
+    },
+    {
+      "type": "text",
+      "id": "support_title",
+      "label": "Título bloque soporte",
+      "default": "Soporte"
+    },
+    {
+      "type": "textarea",
+      "id": "support_text",
+      "label": "Texto bloque soporte",
+      "default": "Equipo de atención para resolver pagos, cambios y seguimiento de envíos."
+    },
+    {
+      "type": "text",
+      "id": "support_email",
+      "label": "Email soporte",
+      "default": "soporte@spiceatlas.com"
+    },
+    {
+      "type": "text",
+      "id": "support_hours",
+      "label": "Horario",
+      "default": "Lunes a viernes, 9:00 - 18:00"
+    },
+    {
+      "type": "text",
+      "id": "support_sla",
+      "label": "SLA",
+      "default": "Menos de 24h hábiles"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Contacto"
+    }
+  ]
+}
+{% endschema %}

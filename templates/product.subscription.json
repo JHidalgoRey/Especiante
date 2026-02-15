@@ -1,0 +1,20 @@
+{
+  "sections": {
+    "main": {
+      "type": "main-product-subscription",
+      "settings": {}
+    },
+    "reviews": {
+      "type": "product-reviews",
+      "settings": {}
+    },
+    "email": {
+      "type": "email-capture",
+      "settings": {
+        "eyebrow": "No te pierdas los próximos países",
+        "heading": "Recibe anuncios de nuevos drops"
+      }
+    }
+  },
+  "order": ["main", "reviews", "email"]
+}

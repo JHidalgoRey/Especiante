@@ -1,0 +1,13 @@
+{
+  "sections": {
+    "main": {
+      "type": "how-it-works-page",
+      "settings": {}
+    },
+    "email": {
+      "type": "email-capture",
+      "settings": {}
+    }
+  },
+  "order": ["main", "email"]
+}

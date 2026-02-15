@@ -1,0 +1,105 @@
+{% liquid
+  assign primary_cta_label = section.settings.cta_label
+  assign primary_cta_link = section.settings.cta_link
+
+  if settings.prelaunch_mode
+    assign primary_cta_label = section.settings.waitlist_label
+    if settings.waitlist_link != blank
+      assign primary_cta_link = settings.waitlist_link
+    else
+      assign primary_cta_link = section.settings.waitlist_link
+    endif
+  endif
+%}
+
+<header class="site-header" role="banner">
+  <div class="page-width site-header__wrap">
+    <a href="{{ routes.root_url }}" class="site-header__brand" aria-label="{{ shop.name }}">
+      {% if section.settings.logo != blank %}
+        {{ section.settings.logo | image_url: width: section.settings.logo_max_width | image_tag: class: 'site-header__logo', loading: 'eager', alt: shop.name }}
+      {% else %}
+        {{ shop.name }}
+      {% endif %}
+    </a>
+
+    <nav class="site-header__nav" aria-label="Navegación principal">
+      <ul class="site-header__nav-list">
+        {% if section.settings.menu != blank %}
+          {% for link in section.settings.menu.links %}
+            <li><a href="{{ link.url }}">{{ link.title }}</a></li>
+          {% endfor %}
+        {% endif %}
+      </ul>
+    </nav>
+
+    <div class="site-header__actions">
+      {% if shop.customer_accounts_enabled %}
+        <a href="{{ routes.account_url }}" class="text-muted">Cuenta</a>
+      {% endif %}
+      <a href="{{ primary_cta_link | default: routes.all_products_collection_url }}" class="btn btn--secondary">{{ primary_cta_label }}</a>
+    </div>
+
+    <details class="mobile-nav">
+      <summary>Menú</summary>
+      <div class="mobile-nav__list">
+        {% if section.settings.menu != blank %}
+          {% for link in section.settings.menu.links %}
+            <a href="{{ link.url }}">{{ link.title }}</a>
+          {% endfor %}
+        {% endif %}
+        <a href="{{ primary_cta_link | default: routes.all_products_collection_url }}" class="btn">{{ primary_cta_label }}</a>
+      </div>
+    </details>
+  </div>
+</header>
+
+{% schema %}
+{
+  "name": "Encabezado",
+  "settings": [
+    {
+      "type": "image_picker",
+      "id": "logo",
+      "label": "Logo"
+    },
+    {
+      "type": "range",
+      "id": "logo_max_width",
+      "label": "Ancho máximo de logo",
+      "min": 80,
+      "max": 280,
+      "step": 10,
+      "default": 150,
+      "unit": "px"
+    },
+    {
+      "type": "link_list",
+      "id": "menu",
+      "label": "Menú principal",
+      "default": "main-menu"
+    },
+    {
+      "type": "text",
+      "id": "cta_label",
+      "label": "Texto CTA principal",
+      "default": "Comenzar suscripción"
+    },
+    {
+      "type": "url",
+      "id": "cta_link",
+      "label": "Enlace CTA principal"
+    },
+    {
+      "type": "text",
+      "id": "waitlist_label",
+      "label": "Texto CTA lista de espera",
+      "default": "Unirme a la lista"
+    },
+    {
+      "type": "url",
+      "id": "waitlist_link",
+      "label": "Enlace CTA lista de espera"
+    }
+  ]
+}
+{% endschema %}

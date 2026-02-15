@@ -1,0 +1,50 @@
+<section class="section-shell">
+  <div class="page-width reveal" style="max-width: 700px;">
+    <span class="eyebrow">{{ section.settings.eyebrow }}</span>
+    <h1>{{ section.settings.title }}</h1>
+    <p class="text-muted">{{ section.settings.text }}</p>
+
+    <div class="product-form__row" style="margin-top: 1rem;">
+      <a class="btn" href="{{ routes.root_url }}">{{ section.settings.home_label }}</a>
+      <a class="btn btn--secondary" href="{{ routes.search_url }}">{{ section.settings.search_label }}</a>
+    </div>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "404 principal",
+  "settings": [
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "Eyebrow",
+      "default": "404"
+    },
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Título",
+      "default": "No encontramos esta página"
+    },
+    {
+      "type": "textarea",
+      "id": "text",
+      "label": "Texto",
+      "default": "Puede que el enlace haya cambiado o el contenido ya no esté disponible."
+    },
+    {
+      "type": "text",
+      "id": "home_label",
+      "label": "Botón inicio",
+      "default": "Ir al inicio"
+    },
+    {
+      "type": "text",
+      "id": "search_label",
+      "label": "Botón buscar",
+      "default": "Buscar productos"
+    }
+  ]
+}
+{% endschema %}

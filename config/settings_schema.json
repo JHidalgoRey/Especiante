@@ -1,0 +1,120 @@
+[
+  {
+    "name": "theme_info",
+    "theme_name": "Spice Atlas",
+    "theme_version": "1.0.0",
+    "theme_author": "Codex",
+    "theme_documentation_url": "https://shopify.dev/themes",
+    "theme_support_url": "https://shopify.dev/themes"
+  },
+  {
+    "name": "Marca y estilo",
+    "settings": [
+      {
+        "type": "image_picker",
+        "id": "favicon",
+        "label": "Favicon"
+      },
+      {
+        "type": "color",
+        "id": "color_background",
+        "label": "Color de fondo",
+        "default": "#f6f2ea"
+      },
+      {
+        "type": "color",
+        "id": "color_surface",
+        "label": "Color de superficie",
+        "default": "#fffdf8"
+      },
+      {
+        "type": "color",
+        "id": "color_text",
+        "label": "Color principal de texto",
+        "default": "#1c1c1a"
+      },
+      {
+        "type": "color",
+        "id": "color_muted",
+        "label": "Color secundario de texto",
+        "default": "#5a574f"
+      },
+      {
+        "type": "color",
+        "id": "color_accent",
+        "label": "Color de acento",
+        "default": "#1f1f1f"
+      },
+      {
+        "type": "color",
+        "id": "color_gold",
+        "label": "Color dorado de detalle",
+        "default": "#b89353"
+      }
+    ]
+  },
+  {
+    "name": "Tipografía",
+    "settings": [
+      {
+        "type": "font_picker",
+        "id": "heading_font",
+        "label": "Fuente de titulares",
+        "default": "times_new_roman_n4"
+      },
+      {
+        "type": "font_picker",
+        "id": "body_font",
+        "label": "Fuente de cuerpo",
+        "default": "helvetica_n4"
+      }
+    ]
+  },
+  {
+    "name": "Layout",
+    "settings": [
+      {
+        "type": "range",
+        "id": "section_spacing",
+        "label": "Espaciado vertical de secciones",
+        "min": 48,
+        "max": 140,
+        "step": 4,
+        "default": 88,
+        "unit": "px"
+      },
+      {
+        "type": "range",
+        "id": "button_radius",
+        "label": "Radio de botones",
+        "min": 0,
+        "max": 40,
+        "step": 2,
+        "default": 14,
+        "unit": "px"
+      }
+    ]
+  },
+  {
+    "name": "Modo pre-lanzamiento",
+    "settings": [
+      {
+        "type": "checkbox",
+        "id": "prelaunch_mode",
+        "label": "Activar pre-lanzamiento",
+        "default": false
+      },
+      {
+        "type": "text",
+        "id": "founder_batch_text",
+        "label": "Texto lote fundador",
+        "default": "Founder Batch — Limitado a 150"
+      },
+      {
+        "type": "url",
+        "id": "waitlist_link",
+        "label": "Enlace principal de lista de espera"
+      }
+    ]
+  }
+]

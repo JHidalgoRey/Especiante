@@ -1,0 +1,171 @@
+<section class="section-shell">
+  <div class="page-width reveal">
+    <div class="card">
+      <span class="eyebrow">{{ section.settings.eyebrow }}</span>
+      <h2>{{ section.settings.heading }}</h2>
+      <p class="text-muted">{{ section.settings.subheading }}</p>
+
+      {% if settings.prelaunch_mode and settings.founder_batch_text != blank %}
+        <p class="badge" style="margin: 1rem 0;">{{ settings.founder_batch_text }}</p>
+      {% endif %}
+
+      {% form 'customer', class: 'newsletter-form' %}
+        {% if form.posted_successfully? %}
+          <p class="badge">{{ section.settings.success_message }}</p>
+        {% endif %}
+
+        {% if form.errors %}
+          <div role="alert" class="app-placeholder">
+            {{ form.errors | default_errors }}
+          </div>
+        {% endif %}
+
+        {% assign capture_tag = 'newsletter' %}
+        {% if settings.prelaunch_mode %}
+          {% assign capture_tag = 'waitlist' %}
+        {% endif %}
+        <input type="hidden" name="contact[tags]" value="{{ capture_tag }}">
+
+        <div class="form-row">
+          <input
+            id="EmailCapture-{{ section.id }}"
+            class="input"
+            type="email"
+            name="contact[email]"
+            required
+            autocomplete="email"
+            placeholder="{{ section.settings.email_placeholder }}"
+          >
+          <button class="btn" type="submit">{{ section.settings.button_label }}</button>
+        </div>
+
+        {% if settings.prelaunch_mode %}
+          <label for="CountryPreference-{{ section.id }}" class="text-muted">{{ section.settings.country_preference_label }}</label>
+          <select id="CountryPreference-{{ section.id }}" class="select" name="contact[preferencia_pais]">
+            <option value="">{{ section.settings.country_placeholder }}</option>
+            {% for block in section.blocks %}
+              {% if block.type == 'country' %}
+                <option value="{{ block.settings.country }}">{{ block.settings.country }}</option>
+              {% endif %}
+            {% endfor %}
+          </select>
+        {% endif %}
+
+        {% if section.settings.lead_magnet_text != blank %}
+          <p class="text-muted" style="font-size: 0.88rem;">{{ section.settings.lead_magnet_text }}</p>
+        {% endif %}
+      {% endform %}
+
+      <div class="review-snippet" style="margin-top: 1rem;">
+        <strong>{{ section.settings.app_placeholder_title }}</strong>
+        <p class="text-muted">{{ section.settings.app_placeholder_text }}</p>
+        {% for block in section.blocks %}
+          {% if block.type == '@app' %}
+            {% render block %}
+          {% endif %}
+        {% endfor %}
+      </div>
+    </div>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Captura de email",
+  "settings": [
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "Eyebrow",
+      "default": "Early access"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Título",
+      "default": "Accede primero a los drops limitados"
+    },
+    {
+      "type": "textarea",
+      "id": "subheading",
+      "label": "Subtítulo",
+      "default": "Únete y recibe novedades, disponibilidad por lote y nuevos países."
+    },
+    {
+      "type": "text",
+      "id": "email_placeholder",
+      "label": "Placeholder email",
+      "default": "Tu mejor email"
+    },
+    {
+      "type": "text",
+      "id": "button_label",
+      "label": "Texto botón",
+      "default": "Unirme"
+    },
+    {
+      "type": "text",
+      "id": "country_preference_label",
+      "label": "Etiqueta preferencia país",
+      "default": "¿Qué país te gustaría recibir primero?"
+    },
+    {
+      "type": "text",
+      "id": "country_placeholder",
+      "label": "Placeholder país",
+      "default": "Selecciona un país"
+    },
+    {
+      "type": "text",
+      "id": "lead_magnet_text",
+      "label": "Texto lead magnet",
+      "default": "Opcional: descarga gratis la guía PDF de especias en 10 minutos tras confirmar tu email."
+    },
+    {
+      "type": "text",
+      "id": "success_message",
+      "label": "Mensaje de éxito",
+      "default": "Gracias. Te avisaremos antes del próximo drop."
+    },
+    {
+      "type": "text",
+      "id": "app_placeholder_title",
+      "label": "Título módulo app",
+      "default": "Integración app de email"
+    },
+    {
+      "type": "textarea",
+      "id": "app_placeholder_text",
+      "label": "Texto módulo app",
+      "default": "Añade aquí Klaviyo, Omnisend o Mailchimp mediante bloque de app."
+    }
+  ],
+  "blocks": [
+    {
+      "type": "country",
+      "name": "País sugerido",
+      "settings": [
+        {
+          "type": "text",
+          "id": "country",
+          "label": "Nombre país",
+          "default": "México"
+        }
+      ]
+    },
+    {
+      "type": "@app"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Captura de email",
+      "blocks": [
+        { "type": "country", "settings": { "country": "México" } },
+        { "type": "country", "settings": { "country": "Marruecos" } },
+        { "type": "country", "settings": { "country": "India" } }
+      ]
+    }
+  ]
+}
+{% endschema %}

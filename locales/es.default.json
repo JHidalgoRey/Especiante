@@ -1,0 +1,12 @@
+{
+  "general": {
+    "accessibility": {
+      "skip_to_content": "Saltar al contenido"
+    }
+  },
+  "customer": {
+    "account": {
+      "title": "Mi cuenta"
+    }
+  }
+}
