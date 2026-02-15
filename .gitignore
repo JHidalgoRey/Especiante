@@ -1,0 +1,5 @@
+# macOS
+.DS_Store
+
+# Theme packages
+*.zip
