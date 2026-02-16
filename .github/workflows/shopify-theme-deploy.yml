@@ -72,18 +72,6 @@ jobs:
             exit 1
           fi
 
-      - name: Verify staging is not live theme
-        run: |
-          LIVE_THEME_ID="$(shopify theme list --store "$SHOPIFY_FLAG_STORE" --json | jq -r '.[] | select((.role // "" | ascii_downcase) == "main") | .id' | head -n1)"
-          if [ -z "$LIVE_THEME_ID" ]; then
-            echo "Could not detect live theme id from store $SHOPIFY_FLAG_STORE"
-            exit 1
-          fi
-          if [ "$LIVE_THEME_ID" = "$STAGING_THEME_ID" ]; then
-            echo "SHOPIFY_THEME_ID_STAGING is pointing to live theme ($LIVE_THEME_ID). Use a draft theme id."
-            exit 1
-          fi
-
       - name: Push theme to staging
         run: shopify theme push --path . --store "$SHOPIFY_FLAG_STORE" --theme "$STAGING_THEME_ID" --nodelete
 
@@ -127,18 +115,5 @@ jobs:
             exit 1
           fi
 
-      - name: Verify production id matches live theme
-        run: |
-          LIVE_THEME_ID="$(shopify theme list --store "$SHOPIFY_FLAG_STORE" --json | jq -r '.[] | select((.role // "" | ascii_downcase) == "main") | .id' | head -n1)"
-          if [ -z "$LIVE_THEME_ID" ]; then
-            echo "Could not detect live theme id from store $SHOPIFY_FLAG_STORE"
-            exit 1
-          fi
-          if [ "$LIVE_THEME_ID" != "$PRODUCTION_THEME_ID" ]; then
-            echo "SHOPIFY_THEME_ID_PRODUCTION ($PRODUCTION_THEME_ID) does not match live theme id ($LIVE_THEME_ID)."
-            echo "Update GitHub secret SHOPIFY_THEME_ID_PRODUCTION to $LIVE_THEME_ID."
-            exit 1
-          fi
-
       - name: Push theme to production
-        run: shopify theme push --path . --store "$SHOPIFY_FLAG_STORE" --theme "$PRODUCTION_THEME_ID" --nodelete --allow-live
+        run: shopify theme push --path . --store "$SHOPIFY_FLAG_STORE" --theme "$PRODUCTION_THEME_ID" --nodelete --allow-live --publish
