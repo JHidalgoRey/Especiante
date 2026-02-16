@@ -1,6 +1,21 @@
 {% liquid
+  assign default_subscribe_link = routes.all_products_collection_url
+  if settings.subscription_product != blank
+    assign default_subscribe_link = settings.subscription_product.url
+  elsif settings.subscription_fallback_link != blank
+    assign default_subscribe_link = settings.subscription_fallback_link
+  elsif collections['all'] != blank and collections['all'].products_count > 0
+    assign first_product = collections['all'].products | first
+    if first_product != blank
+      assign default_subscribe_link = first_product.url
+    endif
+  endif
+
   assign primary_label = section.settings.primary_cta_label
   assign primary_link = section.settings.primary_cta_link
+  if primary_link == blank
+    assign primary_link = default_subscribe_link
+  endif
 
   if settings.prelaunch_mode
     assign primary_label = section.settings.waitlist_cta_label
@@ -24,7 +39,7 @@
       {% endif %}
 
       <div class="hero__actions">
-        <a class="btn" href="{{ primary_link | default: routes.all_products_collection_url }}">{{ primary_label }}</a>
+        <a class="btn" href="{{ primary_link }}">{{ primary_label }}</a>
         {% unless settings.prelaunch_mode %}
           <a class="btn btn--secondary" href="{{ section.settings.waitlist_cta_link | default: settings.waitlist_link }}">{{ section.settings.waitlist_cta_label }}</a>
         {% endunless %}

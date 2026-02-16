@@ -116,5 +116,20 @@
         "label": "Enlace principal de lista de espera"
       }
     ]
+  },
+  {
+    "name": "Conversión",
+    "settings": [
+      {
+        "type": "product",
+        "id": "subscription_product",
+        "label": "Producto principal de suscripción"
+      },
+      {
+        "type": "url",
+        "id": "subscription_fallback_link",
+        "label": "Enlace fallback de suscripción"
+      }
+    ]
   }
 ]

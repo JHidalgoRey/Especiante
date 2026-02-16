@@ -1,3 +1,17 @@
+{% liquid
+  assign default_subscribe_link = routes.all_products_collection_url
+  if settings.subscription_product != blank
+    assign default_subscribe_link = settings.subscription_product.url
+  elsif settings.subscription_fallback_link != blank
+    assign default_subscribe_link = settings.subscription_fallback_link
+  elsif collections['all'] != blank and collections['all'].products_count > 0
+    assign first_product = collections['all'].products | first
+    if first_product != blank
+      assign default_subscribe_link = first_product.url
+    endif
+  endif
+%}
+
 <section class="section-shell">
   <div class="page-width reveal">
     <div class="section-intro">
@@ -12,6 +26,7 @@
 
     <div class="grid pricing-grid">
       {% for block in section.blocks %}
+        {% assign plan_link = block.settings.link | default: default_subscribe_link %}
         <article class="card plan-card {% if block.settings.featured %}plan-card--featured{% endif %}" {{ block.shopify_attributes }}>
           {% if block.settings.badge != blank %}
             <span class="badge">{{ block.settings.badge }}</span>
@@ -20,7 +35,7 @@
           <p class="plan-card__price">{{ block.settings.price }}</p>
           <p class="plan-card__meta">{{ block.settings.meta }}</p>
           <p class="text-muted">{{ block.settings.description }}</p>
-          <a class="btn {% unless block.settings.featured %}btn--secondary{% endunless %}" style="margin-top: 1rem;" href="{{ block.settings.link }}">{{ block.settings.cta }}</a>
+          <a class="btn {% unless block.settings.featured %}btn--secondary{% endunless %}" style="margin-top: 1rem;" href="{{ plan_link }}">{{ block.settings.cta }}</a>
         </article>
       {% endfor %}
     </div>

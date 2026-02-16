@@ -1,3 +1,17 @@
+{% liquid
+  assign default_subscribe_link = routes.all_products_collection_url
+  if settings.subscription_product != blank
+    assign default_subscribe_link = settings.subscription_product.url
+  elsif settings.subscription_fallback_link != blank
+    assign default_subscribe_link = settings.subscription_fallback_link
+  elsif collections['all'] != blank and collections['all'].products_count > 0
+    assign first_product = collections['all'].products | first
+    if first_product != blank
+      assign default_subscribe_link = first_product.url
+    endif
+  endif
+%}
+
 <section class="section-shell">
   <div class="page-width reveal">
     <div class="section-intro">
@@ -27,7 +41,7 @@
           <p class="text-muted">{{ section.settings.recipe_preview }}</p>
         </div>
 
-        <a href="{{ section.settings.cta_link }}" class="btn" style="margin-top: 1.2rem;">{{ section.settings.cta_label }}</a>
+        <a href="{{ section.settings.cta_link | default: default_subscribe_link }}" class="btn" style="margin-top: 1.2rem;">{{ section.settings.cta_label }}</a>
       </div>
 
       <div>
