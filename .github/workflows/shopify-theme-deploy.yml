@@ -85,7 +85,6 @@ jobs:
       SHOPIFY_CLI_THEME_TOKEN: ${{ secrets.SHOPIFY_CLI_THEME_TOKEN }}
       SHOPIFY_FLAG_STORE: ${{ secrets.SHOPIFY_STORE }}
       SHOPIFY_CLI_TTY: "0"
-      PRODUCTION_THEME_ID: ${{ secrets.SHOPIFY_THEME_ID_PRODUCTION }}
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -109,11 +108,6 @@ jobs:
         run: |
           test -n "$SHOPIFY_CLI_THEME_TOKEN" || (echo "Missing SHOPIFY_CLI_THEME_TOKEN" && exit 1)
           test -n "$SHOPIFY_FLAG_STORE" || (echo "Missing SHOPIFY_STORE" && exit 1)
-          test -n "$PRODUCTION_THEME_ID" || (echo "Missing SHOPIFY_THEME_ID_PRODUCTION" && exit 1)
-          if ! [[ "$PRODUCTION_THEME_ID" =~ ^[0-9]+$ ]]; then
-            echo "SHOPIFY_THEME_ID_PRODUCTION must be numeric"
-            exit 1
-          fi
 
       - name: Push theme to production
-        run: shopify theme push --path . --store "$SHOPIFY_FLAG_STORE" --theme "$PRODUCTION_THEME_ID" --nodelete --allow-live --publish
+        run: shopify theme push --path . --store "$SHOPIFY_FLAG_STORE" --live --nodelete --allow-live
