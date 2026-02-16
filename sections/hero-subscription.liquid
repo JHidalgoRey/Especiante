@@ -13,7 +13,11 @@
 
   assign primary_label = section.settings.primary_cta_label
   assign primary_link = section.settings.primary_cta_link
-  if primary_link == blank
+  if settings.subscription_product != blank
+    assign primary_link = settings.subscription_product.url
+  elsif settings.subscription_fallback_link != blank
+    assign primary_link = settings.subscription_fallback_link
+  elsif primary_link == blank
     assign primary_link = default_subscribe_link
   endif
 
