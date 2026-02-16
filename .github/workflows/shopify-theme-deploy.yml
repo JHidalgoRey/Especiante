@@ -60,9 +60,20 @@ jobs:
           test -n "$SHOPIFY_CLI_THEME_TOKEN" || (echo "Missing SHOPIFY_CLI_THEME_TOKEN" && exit 1)
           test -n "$SHOPIFY_FLAG_STORE" || (echo "Missing SHOPIFY_STORE" && exit 1)
           test -n "$STAGING_THEME_ID" || (echo "Missing SHOPIFY_THEME_ID_STAGING" && exit 1)
+          if [[ "$SHOPIFY_FLAG_STORE" == http* ]]; then
+            echo "SHOPIFY_STORE must be domain only, e.g. tu-tienda.myshopify.com (without https://)"
+            exit 1
+          fi
+          if ! [[ "$STAGING_THEME_ID" =~ ^[0-9]+$ ]]; then
+            echo "SHOPIFY_THEME_ID_STAGING must be numeric"
+            exit 1
+          fi
+
+      - name: Verify Shopify access
+        run: shopify theme list --store "$SHOPIFY_FLAG_STORE"
 
       - name: Push theme to staging
-        run: shopify theme push --path . --theme "$STAGING_THEME_ID" --nodelete
+        run: shopify theme push --path . --store "$SHOPIFY_FLAG_STORE" --theme "$STAGING_THEME_ID" --nodelete --verbose
 
   deploy-production:
     name: Deploy Production Theme
@@ -92,6 +103,17 @@ jobs:
           test -n "$SHOPIFY_CLI_THEME_TOKEN" || (echo "Missing SHOPIFY_CLI_THEME_TOKEN" && exit 1)
           test -n "$SHOPIFY_FLAG_STORE" || (echo "Missing SHOPIFY_STORE" && exit 1)
           test -n "$PRODUCTION_THEME_ID" || (echo "Missing SHOPIFY_THEME_ID_PRODUCTION" && exit 1)
+          if [[ "$SHOPIFY_FLAG_STORE" == http* ]]; then
+            echo "SHOPIFY_STORE must be domain only, e.g. tu-tienda.myshopify.com (without https://)"
+            exit 1
+          fi
+          if ! [[ "$PRODUCTION_THEME_ID" =~ ^[0-9]+$ ]]; then
+            echo "SHOPIFY_THEME_ID_PRODUCTION must be numeric"
+            exit 1
+          fi
+
+      - name: Verify Shopify access
+        run: shopify theme list --store "$SHOPIFY_FLAG_STORE"
 
       - name: Push theme to production
-        run: shopify theme push --path . --theme "$PRODUCTION_THEME_ID" --nodelete --allow-live
+        run: shopify theme push --path . --store "$SHOPIFY_FLAG_STORE" --theme "$PRODUCTION_THEME_ID" --nodelete --allow-live --verbose
